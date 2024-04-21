@@ -1,6 +1,7 @@
 import utils
-class BeliefBase:
 
+
+class BeliefBase:
 
     def __init__(self):
         self.beliefs = []
@@ -44,8 +45,8 @@ class Belief:
 if __name__ == "__main__":
     base = BeliefBase()
     print(base.beliefs)
-    b = Belief(formula="a | b", cnf=utils.to_cnf("a | b"))
+    b1 = Belief(formula="a | b", cnf=utils.to_cnf("a | b"))
     b2 = Belief(formula="b | a", cnf=utils.to_cnf("b | a"))
-    base.add(b)
+    base.add(b1)
     base.add(b2)
     print(base.beliefs)

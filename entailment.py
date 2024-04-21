@@ -1,6 +1,6 @@
 import utils
-import sympy as sp
 from belief_base import BeliefBase, Belief
+
 
 def check_entailment(base, conclusion):
     # Convert premises and negated conclusion to CNF  # TODO Remove prints later
@@ -63,23 +63,22 @@ def check_entailment(base, conclusion):
         derived_clauses.update(new_clauses)
 
 
-def resolve_clauses(Ci, Cj):
+def resolve_clauses(ci, cj):
     """
         Returns the set of all possible clauses obtained by resolving Ci and Cj
-        :param Ci: Clause 1, a set of literals
-        :param Cj: Clause 2, a set of literals
+        :param ci: Clause 1, a set of literals
+        :param cj: Clause 2, a set of literals
         :return: A set of new clauses obtained by resolving Ci and Cj
         """
     clauses = set()  # Store all new clauses obtained by resolving
-    for literal in Ci:
+    for literal in ci:
         # Check for complementary literals in the other clause
-        if f'~{literal}' in Cj:
+        if f'~{literal}' in cj:
             # Create a new clause without the resolved literals
-            new_clause = (Ci - {literal}) | (Cj - {f'~{literal}'})
+            new_clause = (ci - {literal}) | (cj - {f'~{literal}'})
             clauses.add(frozenset(new_clause))  # Use frozenset for immutability
 
     return clauses
-
 
 
 if __name__ == '__main__':
@@ -92,4 +91,4 @@ if __name__ == '__main__':
     belief_base.add(Belief(c2, b2))
     print(belief_base.beliefs)
     print(check_entailment(belief_base, utils.to_cnf("b -> !a")))
-    #print(resolve_clauses(c1[1], c2))
+    # print(resolve_clauses(c1[1], c2))
