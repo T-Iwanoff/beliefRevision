@@ -1,5 +1,7 @@
 import utils
 class BeliefBase:
+
+
     def __init__(self):
         self.beliefs = []
 
@@ -20,24 +22,30 @@ class BeliefBase:
             if b == belief:
                 self.beliefs.remove(belief)
 
+    def revise(self, belief):
+        pass
 
-
-
+    def validate(self):
+        pass
 
 
 class Belief:
-    def __init__(self, formula, cnf):
+    def __init__(self, cnf, formula=None):
         self.formula = formula
         self.cnf = cnf
 
     def __eq__(self, other):
-        return self.formula == other.formula
+        return self.cnf == other.cnf
 
     def __repr__(self):
-        return self.formula
+        return f'Formula: {self.formula}, CNF: {self.cnf}'
 
 
 if __name__ == "__main__":
-    belief = BeliefBase()
+    base = BeliefBase()
+    print(base.beliefs)
     b = Belief(formula="a | b", cnf=utils.to_cnf("a | b"))
-    belief.add()
+    b2 = Belief(formula="b | a", cnf=utils.to_cnf("b | a"))
+    base.add(b)
+    base.add(b2)
+    print(base.beliefs)
