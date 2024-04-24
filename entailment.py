@@ -3,19 +3,18 @@ from belief_base import BeliefBase, Belief
 
 
 def check_entailment(base, conclusion):
-    # Convert premises and negated conclusion to CNF  # TODO Remove prints later
+    """ TODO Remove prints later
+    Checks whether a given base entails a conclusion.
+    :param base: A belief base
+    :param conclusion: A cnf expression (set or sympy expr)
+    :return: True if the base entails a conclusion, false if it leads to a contradiction
+    """
+    # Convert premises and negative conclusion to sets
     cnf_premises = [belief.cnf for belief in base.beliefs]
     negated_conclusion = utils.negate_expression(conclusion)
-    # print("premises:", cnf_premises)
-    # print("negative:", negated_conclusion)
 
-    # Combine premises with the negated conclusion
+    # Combine the premises with the negative conclusion
     clauses = set()
-    if isinstance(negated_conclusion, list):
-        for clause in negated_conclusion:
-            clauses.add(frozenset(clause))
-    else:
-        clauses.add(frozenset(negated_conclusion))
 
     for belief in cnf_premises:
         if isinstance(belief, list):
@@ -23,10 +22,28 @@ def check_entailment(base, conclusion):
                 clauses.add(frozenset(clause))
         else:
             clauses.add(frozenset(belief))
+    if isinstance(negated_conclusion, list):
+        for clause in negated_conclusion:
+            clauses.add(frozenset(clause))
+    else:
+        clauses.add(frozenset(negated_conclusion))
 
-    # print("clauses:", clauses)
-    # print("-----")
+    print("premises:", cnf_premises)
+    print("negative:", negated_conclusion)
 
+    print("clauses:", clauses)
+    print("-----")
+
+    # Look for contradictions. If a contradiction is found (with the negated conclusion), the entailment holds
+    return not find_contradiction(clauses)
+
+
+def find_contradiction(clauses):
+    """
+    Returns whether a set of clauses contains a contradiction
+    :param clauses: A set containing frozensets of literals. Each frozenset is a clause
+    :return: Boolean indicating whether the clauses contain a contradiction
+    """
     # Set to keep track of derived clauses
     derived_clauses = set()
 
@@ -39,24 +56,22 @@ def check_entailment(base, conclusion):
             for clause2 in clauses:
                 if clause1 != clause2:
                     resolved_clause = resolve_clauses(clause1, clause2)
-                    # print("resolved clause:", resolved_clause)
                     if resolved_clause:
-                        # print("------ found resolved clause ------")
                         new_clauses.update(frozenset(resolved_clause))
-                        # print("new_clauses:", new_clauses)
 
         # Check for contradictions (empty clause)
         # print("Contradiction check")
         # print("new_clauses:", new_clauses)
+        # print(type(new_clauses))
         if set() in new_clauses:
             # print("empty clause, true")
-            return True  # Logical entailment exists
+            return True
 
-        # If no new clauses are derived, no entailment
+        # If no new clauses are derived, return false
         # print("new clause check")
         if not new_clauses - derived_clauses:
             # print("nothing new, false")
-            return False  # No logical entailment
+            return False  # No contradictions in the provided clauses
 
         # Update clauses and derived clauses
         clauses.update(new_clauses)
@@ -81,14 +96,34 @@ def resolve_clauses(ci, cj):
     return clauses
 
 
+def validate_base(base):
+    """
+    Checks whether a base is contradictory. Returns true if the base is valid
+    :param base: A belief base
+    :return: Boolean indicating whether a base is valid or contradictory
+    """
+    # Turn the belief base into a set of frozensets
+    cnf_premises = [belief.cnf for belief in base.beliefs]
+    clauses = set()
+    for belief in cnf_premises:
+        if isinstance(belief, list):
+            for clause in belief:
+                clauses.add(frozenset(clause))
+        else:
+            clauses.add(frozenset(belief))
+
+    # If there are no contradictions, return true
+    return not find_contradiction(clauses)
+
+
 if __name__ == '__main__':
     belief_base = BeliefBase()
-    b1 = "a and b"
-    b2 = "b -> c"
+    b1 = "c"
+    b2 = "!a"
     c1 = utils.to_cnf(b1)
     c2 = utils.to_cnf(b2)
     belief_base.add(Belief(c1, b1))
     belief_base.add(Belief(c2, b2))
-    print(belief_base.beliefs)
-    print(check_entailment(belief_base, utils.to_cnf("b -> !a")))
-    # print(resolve_clauses(c1[1], c2))
+    print("base:", belief_base.beliefs)
+    print(check_entailment(belief_base, utils.to_cnf("!b")))
+    # print("Is base valid?", validate_base(belief_base))
