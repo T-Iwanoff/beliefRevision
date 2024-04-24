@@ -66,14 +66,21 @@ def cnf_to_set(expr):
 
 def set_to_cnf(cnf):
     """
-        Converts a set or list of sets representing a CNF back to a Sympy CNF expression.
-        :param cnf: A set or list of sets representing a CNF
-        :return: A Sympy CNF expression
-        """
+    Converts a set or list of sets representing a CNF back to a Sympy CNF expression.
+    :param cnf: A set or list of sets representing a CNF
+    :return: A Sympy CNF expression
+    """
     # If it's a single set, create a disjunction
-    if isinstance(cnf, set):
-        disjunction = sp.Or(*[sp.symbols(lit[1:]) if lit.startswith("~") else sp.symbols(lit) for lit in cnf])
-        return disjunction
+    if isinstance(cnf, (set, frozenset)):
+        disjunction = []
+        for lit in cnf:
+            if not lit or len(lit) <= 1:  # Check for invalid literals
+                raise ValueError("Invalid literal found in the set.")
+            if lit.startswith("~"):
+                disjunction.append(sp.Not(sp.symbols(lit[1:])))
+            else:
+                disjunction.append(sp.symbols(lit))
+        return sp.Or(*disjunction)
 
     # If it's a list of sets, create conjunctions of disjunctions
     conjunctions = []
@@ -89,6 +96,11 @@ def set_to_cnf(cnf):
 
 
 def negate_expression(cnf_expr):
+    """
+    Takes a CNF statement, either as a set or sympy expression, and returns the negation as a set
+    :param cnf_expr: A CNF statement (list of sets or sympy expression)
+    :return: The negation as a set or list of sets
+    """
     if not isinstance(cnf_expr, sp.Expr):
         cnf_expr = set_to_cnf(cnf_expr)
     expr = sp.simplify_logic(~cnf_expr)
@@ -104,3 +116,7 @@ if __name__ == "__main__":
     print(set_to_cnf(cnf_expr))
     expr2 = negate_expression(cnf_expr)
     print(expr2)
+    print("-----")
+    frz = frozenset(['~b'])
+    print("set:", frz)
+    print("cnf:", set_to_cnf(frz))
