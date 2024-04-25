@@ -16,17 +16,27 @@ class BeliefBase:
 
     def discard(self, belief):
         """
-        Removes a belief from the belief base.
+        Removes a belief from the belief base. If there are multiple identical beliefs,
+        removes all of them.
         :param belief: A Belief object
         """
         for b in self.beliefs:
             if b == belief:
                 self.beliefs.remove(belief)
 
-    def revise(self, belief):
+    def clear(self):
+        """
+        Empties the belief base.
+        """
+        self.beliefs.clear()
+
+    def expand(self, belief):
         pass
 
-    def validate(self):
+    def contract(self, belief):
+        pass
+
+    def revise(self, belief):
         pass
 
 

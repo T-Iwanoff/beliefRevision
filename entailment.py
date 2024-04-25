@@ -35,13 +35,33 @@ def check_entailment(base, conclusion):
     print("-----")
 
     # Look for contradictions. If a contradiction is found (with the negated conclusion), the entailment holds
-    return not find_contradiction(clauses)
+    return not _find_contradiction(clauses)
 
 
-def find_contradiction(clauses):
+def validate_base(base):
+    """
+    Checks whether a base is contradictory. Returns true if the base is valid
+    :param base: A belief base
+    :return: Boolean indicating whether a base is valid or contradictory
+    """
+    # Turn the belief base into a set of frozensets
+    cnf_premises = [belief.cnf for belief in base.beliefs]
+    clauses = set()
+    for belief in cnf_premises:
+        if isinstance(belief, list):
+            for clause in belief:
+                clauses.add(frozenset(clause))
+        else:
+            clauses.add(frozenset(belief))
+
+    # If there are no contradictions, return true
+    return not _find_contradiction(clauses)
+
+
+def _find_contradiction(clauses):
     """
     Returns whether a set of clauses contains a contradiction
-    :param clauses: A set containing frozensets of literals. Each frozenset is a clause
+    :param clauses: A set containing frozensets of literals. Each frozenset equates to a clause
     :return: Boolean indicating whether the clauses contain a contradiction
     """
     # Set to keep track of derived clauses
@@ -55,7 +75,7 @@ def find_contradiction(clauses):
         for clause1 in clauses:
             for clause2 in clauses:
                 if clause1 != clause2:
-                    resolved_clause = resolve_clauses(clause1, clause2)
+                    resolved_clause = _resolve_clauses(clause1, clause2)
                     if resolved_clause:
                         new_clauses.update(frozenset(resolved_clause))
 
@@ -78,7 +98,7 @@ def find_contradiction(clauses):
         derived_clauses.update(new_clauses)
 
 
-def resolve_clauses(ci, cj):
+def _resolve_clauses(ci, cj):
     """
         Returns the set of all possible clauses obtained by resolving Ci and Cj
         :param ci: Clause 1, a set of literals
@@ -94,26 +114,6 @@ def resolve_clauses(ci, cj):
             clauses.add(frozenset(new_clause))  # Use frozenset for immutability
 
     return clauses
-
-
-def validate_base(base):
-    """
-    Checks whether a base is contradictory. Returns true if the base is valid
-    :param base: A belief base
-    :return: Boolean indicating whether a base is valid or contradictory
-    """
-    # Turn the belief base into a set of frozensets
-    cnf_premises = [belief.cnf for belief in base.beliefs]
-    clauses = set()
-    for belief in cnf_premises:
-        if isinstance(belief, list):
-            for clause in belief:
-                clauses.add(frozenset(clause))
-        else:
-            clauses.add(frozenset(belief))
-
-    # If there are no contradictions, return true
-    return not find_contradiction(clauses)
 
 
 if __name__ == '__main__':
