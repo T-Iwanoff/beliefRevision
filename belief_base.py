@@ -1,6 +1,5 @@
 import utils
 
-
 class BeliefBase:
 
     def __init__(self):
@@ -30,20 +29,15 @@ class BeliefBase:
         """
         self.beliefs.clear()
 
-    def expand(self, belief):
-        pass
-
-    def contract(self, belief):
-        pass
-
     def revise(self, belief):
         pass
 
 
 class Belief:
-    def __init__(self, cnf, formula=None):
+    def __init__(self, cnf, priority = 0, formula=None):
         self.formula = formula
         self.cnf = cnf
+        self.priority = priority
 
     def __eq__(self, other):
         return self.cnf == other.cnf
@@ -60,3 +54,5 @@ if __name__ == "__main__":
     base.add(b1)
     base.add(b2)
     print(base.beliefs)
+
+   
