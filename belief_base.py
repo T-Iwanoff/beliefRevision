@@ -1,4 +1,6 @@
 import utils
+import contraction
+import expansion
 
 class BeliefBase:
 
@@ -30,7 +32,12 @@ class BeliefBase:
         self.beliefs.clear()
 
     def revise(self, belief):
-        pass
+        """
+        Performs belief revision using Levi's Identity
+        :param belief: the belief to added
+        """
+        contraction.contract(self, ~belief)
+        expansion.expansion(self, belief)
 
 
 class Belief:
@@ -43,16 +50,20 @@ class Belief:
         return self.cnf == other.cnf
 
     def __repr__(self):
-        return f'Formula: {self.formula}, CNF: {self.cnf}'
+        return f'Formula: {self.formula}, CNF: {self.cnf}, priority: {self.priority}'
+
+    def __invert__(self):
+        return Belief(priority=self.priority, formula=f"!({self.formula})")
 
 
 if __name__ == "__main__":
     base = BeliefBase()
     print(base.beliefs)
-    b1 = Belief(formula="a | b")
-    b2 = Belief(formula="b | a")
+    b1 = Belief(formula="a", priority=2)
+    b2 = Belief(formula="!a", priority=1)
     base.add(b1)
-    base.add(b2)
-    print(base.beliefs)
+    base.revise(b2)
+    #base.add(b2)
+    #print(base.beliefs)
 
    

@@ -1,5 +1,4 @@
 import utils
-from belief_base import BeliefBase, Belief
 
 
 def check_entailment(base, conclusion):
@@ -117,6 +116,7 @@ def _resolve_clauses(ci, cj):
 
 
 if __name__ == '__main__':
+    from belief_base import BeliefBase, Belief
     belief_base = BeliefBase()
     b1 = "c"
     b2 = "!a"

@@ -1,5 +1,4 @@
 from entailment import validate_base
-from belief_base import BeliefBase, Belief
 
 
 def contract(base, belief):
@@ -33,6 +32,8 @@ def contract(base, belief):
 
 
 if __name__ == '__main__':
+    from belief_base import BeliefBase, Belief
+
     belief_base = BeliefBase()
 
     b1 = Belief(formula="a", priority=2)

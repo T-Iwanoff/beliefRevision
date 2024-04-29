@@ -36,10 +36,10 @@ def handle_user_input(base: BeliefBase):
             print("Enter a formula:")
             formula = input(PROMPT_INPUT)
             try:
-                print("set order of belief (higher = more certain)")
-                order = int(input(PROMPT_INPUT))
-                b = Belief(order, formula)
-                base.add(b)  # TODO change this to revise
+                print("set priority of belief (higher = more certain)")
+                priority = int(input(PROMPT_INPUT))
+                b = Belief(priority, formula)
+                base.revise(b)  # TODO change this to revise
                 print("Revision complete")
                 print("Current belief base:")
                 for belief in base.beliefs:
