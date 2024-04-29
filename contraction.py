@@ -1,7 +1,6 @@
-import utils
-
 from entailment import validate_base
 from belief_base import BeliefBase, Belief
+
 
 def contract(base, belief):
     """
@@ -32,12 +31,13 @@ def contract(base, belief):
 
     return current_base
 
+
 if __name__ == '__main__':
     belief_base = BeliefBase()
 
-    b1 = Belief(formula="a", cnf=utils.to_cnf("a"), priority=2)
-    b2 = Belief(formula="b", cnf=utils.to_cnf("b"), priority=1)
-    b3 = Belief(formula="a -> b", cnf=utils.to_cnf("a -> b"), priority=3)
+    b1 = Belief(formula="a", priority=2)
+    b2 = Belief(formula="b", priority=1)
+    b3 = Belief(formula="a -> b", priority=3)
     belief_base.add(b1)
     belief_base.add(b2)
     belief_base.add(b3)

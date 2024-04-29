@@ -122,8 +122,8 @@ if __name__ == '__main__':
     b2 = "!a"
     c1 = utils.to_cnf(b1)
     c2 = utils.to_cnf(b2)
-    belief_base.add(Belief(c1, b1))
-    belief_base.add(Belief(c2, b2))
+    belief_base.add(Belief(formula=b1))
+    belief_base.add(Belief(formula=b2))
     print("base:", belief_base.beliefs)
     print(check_entailment(belief_base, utils.to_cnf("!b")))
     # print("Is base valid?", validate_base(belief_base))

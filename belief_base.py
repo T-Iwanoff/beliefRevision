@@ -34,9 +34,9 @@ class BeliefBase:
 
 
 class Belief:
-    def __init__(self, cnf, priority = 0, formula=None):
+    def __init__(self, priority=0, formula=None):
         self.formula = formula
-        self.cnf = cnf
+        self.cnf = utils.to_cnf(formula)
         self.priority = priority
 
     def __eq__(self, other):
@@ -49,8 +49,8 @@ class Belief:
 if __name__ == "__main__":
     base = BeliefBase()
     print(base.beliefs)
-    b1 = Belief(formula="a | b", cnf=utils.to_cnf("a | b"))
-    b2 = Belief(formula="b | a", cnf=utils.to_cnf("b | a"))
+    b1 = Belief(formula="a | b")
+    b2 = Belief(formula="b | a")
     base.add(b1)
     base.add(b2)
     print(base.beliefs)
