@@ -21,3 +21,8 @@ To run the engine, run the main.py file
 ```bash
 $ python main.py
 ```
+
+### Github
+
+The repository can be found here:
+https://github.com/T-Iwanoff/beliefRevision
