@@ -39,7 +39,7 @@ def handle_user_input(base: BeliefBase):
                 print("set priority of belief (higher = more certain)")
                 priority = int(input(PROMPT_INPUT))
                 b = Belief(priority, formula)
-                base.revise(b)  # TODO change this to revise
+                base.revise(b)
                 print("Revision complete")
                 print("Current belief base:")
                 for belief in base.beliefs:
