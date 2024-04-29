@@ -63,6 +63,8 @@ def handle_user_input(base: BeliefBase):
 
 if __name__ == '__main__':
     bb = BeliefBase()
-    bb.add(Belief(formula="a | b"))
+    # Sample for filling out the belief base quickly
+    # bb.add(Belief(formula="a | b"))
+
     print_help()
     handle_user_input(bb)
